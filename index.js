@@ -1,6 +1,7 @@
 const express = require("express") //uma const não permite que sobre-escreva
 const app = express() //cria um cópia inteira do express
 const handlebars = require('express-handlebars')
+const bodyParser = require('body-parser')
 
 /* CONFIG */
 
@@ -9,16 +10,26 @@ const handlebars = require('express-handlebars')
         app.engine('handlebars', handlebars({defaultLayout: 'main'}))
         app.set('view engine', 'handlebars')
     
+    /* BODY PARSER */
+
+        app.use(bodyParser.urlencoded({extended: false}))
+        app.use(bodyParser.json())
+    
     /* DATABASE CONECTION WITH SEQUELIZE */
 
-        const Sequelize = require('sequelize')
-        const sequelize = new Sequelize('sistemaDeCadastro', 'root', 'Cb25032013', {host: "localhost", dialect: 'mysql'})
+        
 
-        sequelize.authenticate().then(function(){
-            console.log("Conectado com sucesso!")
-        }).catch(function(erro){
-            console.log("Falha ao se conectar: " +erro)
-        })
+/* ROUTES */ 
+
+    app.get("/cad", function(req, res)
+    {
+        res.render('formulario')
+    })
+
+    app.post("/add", function(req, res)
+    {
+        res.send("Texto: "+req.body.titulo+" Conteúdo: "+req.body.conteudo)
+    })
 
 
 /* EXEMPLO DE COMO CONECTAR AO BD E CRIAR UMA TABELA COM SEQUELIZE
